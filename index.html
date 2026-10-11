@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ClipForge AI — Turn one video into five shorts</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark">✦</span><span>clipforge<span class="brand-ai">.ai</span></span></div>
+    <div class="workspace-label">WORKSPACE</div>
+    <button class="nav active" data-view="studio"><span>▦</span> Repurpose studio</button>
+    <button class="nav" data-view="library"><span>▤</span> Your projects</button>
+    <div class="sidebar-bottom">
+      <div class="plan-card"><div class="plan-icon">✧</div><b>Creator workspace</b><p>Runs in your browser. No account or API key required for this demo.</p><span class="plan-pill">FREE MVP</span></div>
+      <div class="profile"><div class="avatar">C</div><div><b>Creator</b><small>Local workspace</small></div><span class="dots">•••</span></div>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div class="crumb">Workspace <span>/</span> <b>Repurpose studio</b></div><div class="top-right"><span class="status-dot"></span> Browser processing <span class="top-avatar">C</span></div></header>
+    <section class="page" id="studio-view">
+      <div class="hero"><div><div class="eyebrow"><span class="spark">✦</span> VIDEO REPURPOSING WORKSPACE</div><h1>One video. <em>Five shorts.</em></h1><p>Turn long-form footage into vertical-ready clips, with editable captions and voiceover tools.</p></div><div class="hero-orb"><div class="orb-inner">✦</div><span class="orb-ring ring-one"></span><span class="orb-ring ring-two"></span></div></div>
+      <div class="steps"><div class="step active"><span>1</span> Upload video</div><div class="step-line"></div><div class="step"><span>2</span> Set your style</div><div class="step-line"></div><div class="step"><span>3</span> Create shorts</div></div>
+      <div class="workspace-grid">
+        <div class="left-column">
+          <section class="panel upload-panel">
+            <div class="panel-heading"><div><span class="section-number">01</span><h2>Source video</h2></div><span class="tiny-tag">MP4 · WEBM · MOV*</span></div>
+            <label class="dropzone" id="dropzone" for="video-file"><input id="video-file" type="file" accept="video/*">
+              <div class="upload-symbol"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg></div>
+              <strong>Drop your video here</strong><span>or <u>browse files</u> from your device</span><small>Best results with a video stored on your device</small>
+            </label>
+            <div id="source-info" class="source-info hidden"><video id="source-video" controls playsinline></video><div class="source-meta"><b id="file-name">video.mp4</b><span id="file-details">Ready to process</span><button class="text-button" id="remove-video">Remove video</button></div></div>
+            <div class="notice"><span>ⓘ</span><p><b>Privacy-first:</b> this MVP processes your selected file locally in this browser. Your video is not uploaded to a server.</p></div>
+          </section>
+          <section class="panel settings-panel">
+            <div class="panel-heading"><div><span class="section-number">02</span><h2>Shorts settings</h2></div><span class="tiny-tag">CUSTOMIZE</span></div>
+            <div class="form-grid">
+              <div class="field"><label for="duration">Clip length</label><div class="select-wrap"><select id="duration"><option value="20">20 seconds</option><option value="30" selected>30 seconds</option><option value="45">45 seconds</option><option value="60">60 seconds</option></select><span>⌄</span></div></div>
+              <div class="field"><label for="format">Video format</label><div class="select-wrap"><select id="format"><option value="9:16" selected>Vertical · 9:16</option><option value="1:1">Square · 1:1</option><option value="16:9">Landscape · 16:9</option></select><span>⌄</span></div></div>
+              <div class="field"><label for="caption-style">Caption style</label><div class="select-wrap"><select id="caption-style"><option value="bold" selected>Bold creator</option><option value="clean">Clean subtitles</option><option value="minimal">Minimal</option></select><span>⌄</span></div></div>
+              <div class="field"><label for="voice">Narrator voice</label><div class="select-wrap"><select id="voice"><option value="none">No voiceover</option><option value="female">Available female voice</option><option value="male">Available male voice</option><option value="any" selected>Default available voice</option></select><span>⌄</span></div></div>
+            </div>
+            <div class="field full"><label for="topic">Topic or key message <span class="optional">OPTIONAL</span></label><input id="topic" type="text" placeholder="e.g. 3 mistakes beginners make when…"></div>
+            <div class="field full"><label for="script">Narration / caption text <span class="optional">OPTIONAL</span></label><textarea id="script" rows="3" placeholder="Paste a transcript or narration here to create editable captions and voiceover…"></textarea><div class="field-hint">A transcript is needed for accurate spoken-word captions in this no-server version.</div></div>
+          </section>
+        </div>
+        <div class="right-column">
+          <section class="panel output-panel">
+            <div class="panel-heading"><div><span class="section-number">03</span><h2>Your short-form set</h2></div><span class="count-badge" id="clip-count">0 / 5</span></div>
+            <div class="output-empty" id="empty-state"><div class="empty-art"><div class="phone"><div class="phone-top"></div><div class="play">▶</div><div class="caption-lines"><i></i><i></i></div></div><div class="floating f1">✦</div><div class="floating f2">↗</div></div><h3>Your clips will appear here</h3><p>Upload a video and create five clip drafts. You can preview each cut and export it.</p><div class="empty-checks"><span>✓ 5 clip drafts</span><span>✓ Vertical layout</span><span>✓ Editable captions</span></div></div>
+            <div id="clip-list" class="clip-list hidden"></div>
+            <div class="processing hidden" id="processing"><div class="spinner"></div><b id="processing-title">Preparing your clips…</b><span id="processing-sub">Analyzing video duration</span><div class="progress"><i id="progress-bar"></i></div></div>
+            <div class="output-actions"><button id="create-btn" class="primary-btn" disabled><span>✦</span> Create 5 shorts <span class="arrow">→</span></button><p>Creates draft segments locally. It does not yet use a cloud AI model to identify highlights.</p></div>
+          </section>
+          <section class="panel workflow-panel"><div class="workflow-title"><span class="workflow-icon">✧</span><div><b>Creator workflow</b><small>Built for a faster first draft</small></div></div><div class="workflow-row"><span class="wf-icon">◉</span><div><b>Clip selection</b><p>Five evenly distributed segments from your source video.</p></div><span class="wf-state">LOCAL</span></div><div class="workflow-row"><span class="wf-icon">Aa</span><div><b>Captions & voice</b><p>Use a transcript for caption drafts and browser text-to-speech.</p></div><span class="wf-state">EDITABLE</span></div><div class="workflow-row"><span class="wf-icon">⇧</span><div><b>Export</b><p>Download each clip draft as a video file.</p></div><span class="wf-state">BROWSER</span></div></section>
+        </div>
+      </div>
+      <footer>CLIPFORGE.AI <span>·</span> Browser-based prototype <span class="footer-right">Your files stay on your device</span></footer>
+    </section>
+    <section class="page hidden" id="library-view"><div class="hero compact"><div><div class="eyebrow">WORKSPACE LIBRARY</div><h1>Your <em>projects.</em></h1><p>Projects in this prototype are kept only for the current browser session.</p></div></div><div class="panel library-panel"><div class="empty-library">No saved projects yet. Create a set of shorts in the Repurpose studio to get started.</div><button class="primary-btn" id="back-to-studio">Open repurpose studio →</button></div></section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script src="app.js"></script>
+</body></html>
