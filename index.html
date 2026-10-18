@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#10111a">
+  <title>ClipForge Studio — Video Clipper</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">✂</span><div><strong>ClipForge</strong><small>STUDIO</small></div></div>
+    <div class="top-actions"><span class="local-pill"><i></i> Runs in your browser</span><a href="#how-it-works">How it works</a></div>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="eyebrow">VIDEO → SHORT-FORM CONTENT</div>
+      <h1>One video.<br><span>Five clips worth sharing.</span></h1>
+      <p>Choose moments, style them for vertical video, add captions, and export clips on your device.</p>
+    </section>
+
+    <section class="workspace">
+      <aside class="panel source-panel">
+        <div class="section-heading"><span class="step">01</span><div><h2>Add your video</h2><p>Use a video file you have permission to edit.</p></div></div>
+        <label class="dropzone" id="dropzone" for="videoFile">
+          <input type="file" id="videoFile" accept="video/*">
+          <span class="upload-icon">↑</span>
+          <strong>Choose a video file</strong>
+          <span>or drag and drop it here</span>
+          <small>Video stays on your device</small>
+        </label>
+        <div class="divider-label"><span>OR</span></div>
+        <label class="field-label" for="youtubeUrl">YouTube link</label>
+        <div class="url-row"><input id="youtubeUrl" type="url" placeholder="https://youtube.com/watch?v=…"><button id="openYoutube" class="button secondary">Open</button></div>
+        <p class="hint">A link can open the source, but browsers generally cannot download/edit YouTube video directly. For exporting, upload a video file you’re allowed to use.</p>
+        <div id="videoMeta" class="video-meta hidden"></div>
+        <div class="section-heading settings-heading"><span class="step">02</span><div><h2>Clip settings</h2><p>Choose a format and starting points.</p></div></div>
+        <label class="field-label" for="format">Output format</label>
+        <select id="format" class="full-input"><option value="vertical">Vertical 9:16 · Shorts / Reels / TikTok</option><option value="original">Keep original proportions</option><option value="square">Square 1:1</option></select>
+        <label class="field-label" for="clipLength">Target clip length</label>
+        <div class="range-row"><input id="clipLength" type="range" min="10" max="60" step="5" value="30"><output id="clipLengthOut">30 seconds</output></div>
+        <label class="field-label" for="clipCount">Number of clips</label>
+        <select id="clipCount" class="full-input"><option>3</option><option selected>5</option><option>7</option></select>
+        <button id="generateClips" class="button primary full-button" disabled>✦ Find clip starting points</button>
+        <p class="hint">This creates editable candidate segments from the video duration. It does not use AI to understand speech or detect viral moments.</p>
+      </aside>
+
+      <section class="panel editor-panel">
+        <div class="section-heading"><span class="step">03</span><div><h2>Preview & edit</h2><p>Adjust each segment before exporting.</p></div><span id="clipCountBadge" class="count-badge">0 clips</span></div>
+        <div class="preview-layout">
+          <div class="video-stage" id="videoStage">
+            <div class="empty-preview"><div class="play-glyph">▶</div><strong>Your preview appears here</strong><span>Upload a video to begin</span></div>
+            <video id="sourceVideo" playsinline preload="metadata" class="hidden"></video>
+            <canvas id="previewCanvas" class="hidden"></canvas>
+            <div id="previewOverlay" class="preview-overlay hidden"><span id="overlayHook">YOUR HOOK GOES HERE</span></div>
+          </div>
+          <div class="preview-controls">
+            <button id="playPause" class="button secondary" disabled>▶ Play</button>
+            <span id="currentTime">00:00</span>
+            <input id="scrubber" type="range" min="0" max="100" value="0" disabled aria-label="Video position">
+            <span id="durationText">00:00</span>
+          </div>
+        </div>
+        <div class="selected-editor">
+          <div class="editor-title"><h3>Selected clip</h3><span id="selectedClipLabel">No clip selected</span></div>
+          <div class="two-fields">
+            <div><label class="field-label" for="clipTitle">Opening hook / title</label><input id="clipTitle" class="full-input" placeholder="Add a short opening hook…" disabled></div>
+            <div><label class="field-label" for="captionText">Caption text</label><input id="captionText" class="full-input" placeholder="Type a caption to display…" disabled></div>
+          </div>
+          <div class="three-fields">
+            <div><label class="field-label" for="startTime">Start (seconds)</label><input id="startTime" class="full-input" type="number" min="0" step="0.1" disabled></div>
+            <div><label class="field-label" for="endTime">End (seconds)</label><input id="endTime" class="full-input" type="number" min="0" step="0.1" disabled></div>
+            <div><label class="field-label" for="captionStyle">Caption style</label><select id="captionStyle" class="full-input" disabled><option value="bold">Bold highlight</option><option value="clean">Clean subtitle</option><option value="minimal">Minimal</option></select></div>
+          </div>
+          <div class="edit-actions"><button id="saveClip" class="button primary" disabled>Save clip edits</button><button id="deleteClip" class="button danger" disabled>Remove clip</button><span id="editStatus" role="status"></span></div>
+        </div>
+        <div class="clip-list-header"><h3>Your clip candidates</h3><span>Click a clip to edit it</span></div>
+        <div id="clipList" class="clip-list"><div class="empty-list">Your clip candidates will appear here.</div></div>
+      </section>
+    </section>
+
+    <section class="export-panel panel">
+      <div class="section-heading"><span class="step">04</span><div><h2>Export your clips</h2><p>Render and download finished video files, one at a time.</p></div></div>
+      <div class="export-info"><div class="export-icon">⇩</div><div><strong>Local export</strong><p>Clips are rendered in this browser. Keep this tab open while exporting. Export is WebM, supported by most modern browsers and editing apps.</p></div></div>
+      <div id="exportProgress" class="progress-wrap hidden"><div class="progress-track"><div id="progressBar"></div></div><span id="progressLabel">Preparing…</span></div>
+      <div id="exportList" class="export-list"><p class="hint">Add a video and create clip candidates to see export options.</p></div>
+      <p class="footnote">Only edit videos you own or have permission to use. Export performance depends on your device and video length.</p>
+    </section>
+
+    <section id="how-it-works" class="how-section">
+      <h2>Designed to keep the workflow simple</h2>
+      <div class="how-grid"><div><span>1</span><strong>Upload</strong><p>Select a local video file.</p></div><div><span>2</span><strong>Pick moments</strong><p>Generate candidates, then refine the start and end times.</p></div><div><span>3</span><strong>Style</strong><p>Add your own hook and caption overlay.</p></div><div><span>4</span><strong>Export</strong><p>Render and download each clip as a separate file.</p></div></div>
+    </section>
+  </main>
+  <footer><span>ClipForge Studio</span><span>Private by design · No account · No API key</span></footer>
+  <script src="app.js"></script>
+</body>
+</html>
